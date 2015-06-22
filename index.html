@@ -10,7 +10,8 @@
   <div ng-controller="tzSelectCtrl">
     {{test}}
     {{dateOutput|date:'medium'}}<br>
-    <select ng-init="offsetObj=testObj[0]" ng-model="offsetObj" ng-options="item.value for item in testObj" ng-change="setIt()">
+    <select ng-init="selectedRangeObj=zones[0]" ng-model="selectedRangeObj" ng-options="item.area for item in zones" ng-change="setSelect()"></select>
+    <select ng-init="offsetObj=inRangeTimezones[0]" ng-model="offsetObj" ng-options="item.value for item in inRangeTimezones" ng-change="changeIt()">
       <option value="" selected>--Please select your timezone--</option>
     </select><br>
     <label><input type="checkbox" ng-model="showMap">Check box to toggle reference map</label><br>
