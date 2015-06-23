@@ -7,7 +7,7 @@ var thisApp=angular.module('time_finder',[])
   //Prepare the data here and set initial display
   Data.getData().success(function(arritems){
     $scope.testObj=arritems;
-    $scope.test="Your time: ";
+    $scope.test="Your time";
   });
 
   // Narrow down the area if desired
@@ -29,6 +29,8 @@ var thisApp=angular.module('time_finder',[])
   ];
   $scope.inRangeTimezones=[];
   $scope.selectedRangeObj={};
+
+  //Filter timezone options according to selected region
   $scope.setSelect=function(){
     $scope.inRangeTimezones=[];
     if (!$scope.selectedRangeObj.area){
@@ -36,16 +38,20 @@ var thisApp=angular.module('time_finder',[])
     }
     else {
       for (var i=0;i<$scope.testObj.length;i++){
-        if ($scope.testObj[i].offset>=$scope.selectedRangeObj.low && $scope.testObj[i].offset<$scope.selectedRangeObj.high){
+        if ($scope.testObj[i].offset>$scope.selectedRangeObj.low && $scope.testObj[i].offset<=$scope.selectedRangeObj.high){
           $scope.inRangeTimezones.push($scope.testObj[i]);
         }
         else {continue};
       }
     }
   }
+
+  //Reference map
   $scope.timezoneMapSrc="http://www.satellitecitymaps.com/gfx/map_of_timezones.jpg";
   $scope.showMap=false;
   var nowDate=new Date();
+
+  //Function to change time according to selected timezone
   $scope.adjustHours=function(adj){
     var nowDate=new Date();
     var UTCHours=nowDate.getUTCHours();
@@ -56,6 +62,8 @@ var thisApp=angular.module('time_finder',[])
   }
   $scope.offsetObj={};
   $scope.dateOutput=nowDate;
+
+  //Set displayed time according to current conditions
   $scope.setIt=function(){
     if (!$scope.offsetObj){
       var d=new Date();
@@ -72,13 +80,17 @@ var thisApp=angular.module('time_finder',[])
     }
     $scope.dateOutput=$scope.adjustHours($scope.thisIsTheOffset);
   }
+
+  //Change time when a new option is selected
   $scope.changeIt=function(){
     $scope.setIt();
     if (!$scope.offsetObj){
-      $scope.test="Your time: "
+      $scope.test="Your time"
     }
     else {
       $scope.test=$scope.offsetObj.text;}
   }
+
+  //Update clock display every second
   $interval(function(){$scope.setIt()},1000);
 }])
