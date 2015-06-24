@@ -7,7 +7,10 @@ var thisApp=angular.module('time_finder',[])
   //Prepare the data here and set initial display
   Data.getData().success(function(arritems){
     $scope.testObj=arritems;
-    $scope.test="Your time";
+    $scope.timeCenterInfo="Your time";
+    $scope.inRangeTimezones=$scope.testObj;
+    var initialDate=new Date();
+    $scope.timezoneName="Time difference from UTC is "+(initialDate.getTimezoneOffset()/(-60)) + " hours";
   });
 
   // Narrow down the area if desired
@@ -27,7 +30,6 @@ var thisApp=angular.module('time_finder',[])
     new zoneObjDef(7,9,"Central Russia, China and East Asia, Indian Ocean to East Pacific Ocean, West Australia"),
     new zoneObjDef(9,12,"Eastern Russia, Central and Eastern Australia, East Pacific Ocean to IDL")
   ];
-  $scope.inRangeTimezones=[];
   $scope.selectedRangeObj={};
 
   //Filter timezone options according to selected region
@@ -38,7 +40,11 @@ var thisApp=angular.module('time_finder',[])
     }
     else {
       for (var i=0;i<$scope.testObj.length;i++){
-        if ($scope.testObj[i].offset>$scope.selectedRangeObj.low && $scope.testObj[i].offset<=$scope.selectedRangeObj.high){
+        if ($scope.testObj[i].isdst===true){
+          $scope.testObj[i].trueOffset=$scope.testObj[i].offset-1;
+        }
+        else {$scope.testObj[i].trueOffset=$scope.testObj[i].offset;}
+        if ($scope.testObj[i].trueOffset>$scope.selectedRangeObj.low && $scope.testObj[i].trueOffset<=$scope.selectedRangeObj.high){
           $scope.inRangeTimezones.push($scope.testObj[i]);
         }
         else {continue};
@@ -56,11 +62,12 @@ var thisApp=angular.module('time_finder',[])
     var nowDate=new Date();
     var UTCHours=nowDate.getUTCHours();
     var UTCMinutes=nowDate.getUTCMinutes();
+    var wrongDate=nowDate.getDate();
+    var correctDate=nowDate.setDate(wrongDate+1);
     nowDate.setHours(UTCHours);
     nowDate.setMinutes(UTCMinutes+(adj*60));
     return nowDate;
   }
-  $scope.offsetObj={};
   $scope.dateOutput=nowDate;
 
   //Set displayed time according to current conditions
@@ -85,10 +92,12 @@ var thisApp=angular.module('time_finder',[])
   $scope.changeIt=function(){
     $scope.setIt();
     if (!$scope.offsetObj){
-      $scope.test="Your time"
+      $scope.timeCenterInfo="Your time"
     }
     else {
-      $scope.test=$scope.offsetObj.text;}
+      $scope.timeCenterInfo=$scope.offsetObj.text;
+      $scope.timezoneName=$scope.offsetObj.value;
+    }
   }
 
   //Update clock display every second
