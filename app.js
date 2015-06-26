@@ -62,8 +62,8 @@ var thisApp=angular.module('time_finder',[])
     var nowDate=new Date();
     var UTCHours=nowDate.getUTCHours();
     var UTCMinutes=nowDate.getUTCMinutes();
-    var wrongDate=nowDate.getDate();
-    var correctDate=nowDate.setDate(wrongDate+1);
+    // var wrongDate=nowDate.getDate();
+    // var correctDate=nowDate.setDate(wrongDate+1);
     nowDate.setHours(UTCHours);
     nowDate.setMinutes(UTCMinutes+(adj*60));
     return nowDate;
@@ -88,7 +88,7 @@ var thisApp=angular.module('time_finder',[])
     $scope.dateOutput=$scope.adjustHours($scope.thisIsTheOffset);
   }
 
-  //Change time when a new option is selected
+  //Change time and displayed info when a new option is selected
   $scope.changeIt=function(){
     $scope.setIt();
     if (!$scope.offsetObj){

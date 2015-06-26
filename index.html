@@ -13,45 +13,43 @@
     .info_pieces{
       display:inline-block;
       text-align:center;
-      width:49%;
-      border:1px solid #779ECB;
     }
     .clock_display{
-      max-width:97%;
       height:auto;
       display:'inline-block';
       text-align:center;
       font-family:"Courier New", Courier, monospace;
-      padding:0.5%;
-      border: 1px groove #966FD6;
     }
 
     select, option {
-      width:49%;
       display:'inline-block';
     }
   </style>
 </head>
 <body ng-app="time_finder">
   <div ng-controller="tzSelectCtrl">
-    <div class="info_display">
-      <span class="info_pieces">{{timezoneName}}</span>
-      <span class="info_pieces">{{timeCenterInfo}}</span>
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <span class="info_pieces">{{timezoneName}}</span>
+        <span class="info_pieces">{{timeCenterInfo}}</span>
+      </div>
+      <div class="pure-u-1">
+        {{dateOutput|date:'mediumTime'}}<br>
+        {{dateOutput|date:'fullDate'}}<br>
+      </div>
+      <div class="pure-u-1">
+        <form class="pure-form">
+          <fieldset>
+            <select ng-model="selectedRangeObj" ng-options="item.area for item in zones" ng-change="setSelect()">
+              <option value="" selected>--Please select a timezone region, if desired--</option>
+            </select>
+            <select ng-model="offsetObj" ng-options="item.value for item in inRangeTimezones" ng-change="changeIt()">
+              <option value="" selected>--Please select your timezone--</option>
+            </select><br>
+          </fieldset>
+        </form>
+      </div>
     </div>
-    <div class="clock_display">
-      {{dateOutput|date:'mediumTime'}}<br>
-      {{dateOutput|date:'fullDate'}}<br>
-    </div>
-    <form class="pure-form">
-      <fieldset>
-        <select ng-model="selectedRangeObj" ng-options="item.area for item in zones" ng-change="setSelect()">
-          <option value="" selected>--Please select a timezone region, if desired--</option>
-        </select>
-        <select ng-model="offsetObj" ng-options="item.value for item in inRangeTimezones" ng-change="changeIt()">
-          <option value="" selected>--Please select your timezone--</option>
-        </select><br>
-      </fieldset>
-    </form>
     <label><input type="checkbox" ng-model="showMap">Check box to toggle reference map</label><br>
     <div ng-show="showMap">
       <img ng-src="{{timezoneMapSrc}}" width=100% /><br>
